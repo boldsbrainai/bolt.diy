@@ -54,3 +54,7 @@ test_output*.txt
 api-test-results.json
 scripts/test-apis.mjs
 scripts/validate-apis.mjs
+
+# Docker persistent storage
+.docker/
+
