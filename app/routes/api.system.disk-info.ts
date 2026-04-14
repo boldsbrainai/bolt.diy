@@ -1,19 +1,20 @@
 import type { ActionFunctionArgs, LoaderFunction } from '@remix-run/cloudflare';
 import { json } from '@remix-run/cloudflare';
 
-// Only import child_process if we're not in a Cloudflare environment
-let execSync: any;
+let execSync: ((cmd: string, opts: any) => string) | null = null;
 
+// Only import child_process if we're not in a Cloudflare environment
 try {
   // Check if we're in a Node.js environment
   if (typeof process !== 'undefined' && process.platform) {
-    // Using dynamic import to avoid require()
-    const childProcess = { execSync: null };
-    execSync = childProcess.execSync;
+    // Import the real execSync from child_process
+    const { execSync: nodeExecSync } = require('child_process');
+    execSync = nodeExecSync;
   }
 } catch {
-  // In Cloudflare environment, this will fail, which is expected
+  // In Cloudflare environment or when child_process is unavailable
   console.log('Running in Cloudflare environment, child_process not available');
+  execSync = null;
 }
 
 // For development environments, we'll always provide mock data if real data isn't available
@@ -82,7 +83,24 @@ const getDiskInfo = (): DiskInfo[] => {
     const platform = process.platform;
     let disks: DiskInfo[] = [];
 
-    if (platform === 'darwin') {
+    // Early exit if execSync is not available (and not in development)
+    if (!execSync) {
+      if (!isDevelopment) {
+        return [
+          {
+            filesystem: 'N/A',
+            size: 0,
+            used: 0,
+            available: 0,
+            percentage: 0,
+            mountpoint: 'N/A',
+            timestamp: new Date().toISOString(),
+            error: 'Disk information is not available in this environment',
+          },
+        ];
+      }
+      // For development, continue to mock data handling below
+    } else if (platform === 'darwin' && execSync) {
       // macOS - use df command to get disk information
       try {
         const output = execSync('df -k', { encoding: 'utf-8' }).toString().trim();
@@ -134,7 +152,7 @@ const getDiskInfo = (): DiskInfo[] => {
           },
         ];
       }
-    } else if (platform === 'linux') {
+    } else if (platform === 'linux' && execSync) {
       // Linux - use df command to get disk information
       try {
         const output = execSync('df -k', { encoding: 'utf-8' }).toString().trim();
@@ -186,7 +204,7 @@ const getDiskInfo = (): DiskInfo[] => {
           },
         ];
       }
-    } else if (platform === 'win32') {
+    } else if (platform === 'win32' && execSync) {
       // Windows - use PowerShell to get disk information
       try {
         const output = execSync(

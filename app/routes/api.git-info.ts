@@ -1,11 +1,26 @@
 import { json } from '@remix-run/cloudflare';
-import { execSync } from 'child_process';
-import { existsSync } from 'fs';
+
+let execSync: ((cmd: string, opts: any) => string) | null = null;
+let existsSync: ((path: string) => boolean) | null = null;
+
+// Only import fs and child_process if we're not in a Cloudflare environment
+try {
+  if (typeof process !== 'undefined' && process.platform) {
+    const { execSync: nodeExecSync } = require('child_process');
+    const { existsSync: nodeExistsSync } = require('fs');
+    execSync = nodeExecSync;
+    existsSync = nodeExistsSync;
+  }
+} catch {
+  console.log('Running in Cloudflare environment, fs and child_process not available');
+  execSync = null;
+  existsSync = null;
+}
 
 export async function loader() {
   try {
-    // Check if we're in a git repository
-    if (!existsSync('.git')) {
+    // Check if we're in a git repository (only in Node.js environments)
+    if (!execSync || !existsSync || !existsSync('.git')) {
       return json({
         branch: 'unknown',
         commit: 'unknown',

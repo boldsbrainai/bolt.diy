@@ -56,10 +56,10 @@ export const loader: LoaderFunction = async ({ request, context }: LoaderFunctio
 
   // Check if API endpoints are reachable
   const apiEndpoints = {
-    githubUser: '/api/system/git-info?action=getUser',
-    githubRepos: '/api/system/git-info?action=getRepos',
-    githubOrgs: '/api/system/git-info?action=getOrgs',
-    githubActivity: '/api/system/git-info?action=getActivity',
+    githubUser: '/api/github/user',
+    githubRepos: '/api/github/repos',
+    githubOrgs: '/api/github/orgs',
+    githubActivity: '/api/github/activity',
     gitInfo: '/api/system/git-info',
   };
 
