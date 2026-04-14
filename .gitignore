@@ -51,3 +51,6 @@ docs/instructions/Roadmap.md
 # temporary test/debug files
 run_test_*.ps1
 test_output*.txt
+api-test-results.json
+scripts/test-apis.mjs
+scripts/validate-apis.mjs
