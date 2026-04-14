@@ -11,7 +11,6 @@ interface ModelsResponse {
 }
 
 let cachedProviders: ProviderInfo[] | null = null;
-let cachedDefaultProvider: ProviderInfo | null = null;
 
 function getProviderInfo(llmManager: LLMManager) {
   if (!cachedProviders) {
@@ -24,18 +23,16 @@ function getProviderInfo(llmManager: LLMManager) {
     }));
   }
 
-  if (!cachedDefaultProvider) {
-    const defaultProvider = llmManager.getDefaultProvider();
-    cachedDefaultProvider = {
-      name: defaultProvider.name,
-      staticModels: defaultProvider.staticModels,
-      getApiKeyLink: defaultProvider.getApiKeyLink,
-      labelForGetApiKey: defaultProvider.labelForGetApiKey,
-      icon: defaultProvider.icon,
-    };
-  }
+  const defaultProvider = llmManager.getDefaultProvider();
+  const defaultProviderInfo = {
+    name: defaultProvider.name,
+    staticModels: defaultProvider.staticModels,
+    getApiKeyLink: defaultProvider.getApiKeyLink,
+    labelForGetApiKey: defaultProvider.labelForGetApiKey,
+    icon: defaultProvider.icon,
+  };
 
-  return { providers: cachedProviders, defaultProvider: cachedDefaultProvider };
+  return { providers: cachedProviders, defaultProvider: defaultProviderInfo };
 }
 
 export async function loader({

@@ -3,6 +3,7 @@ import { BaseProvider } from './base-provider';
 import type { ModelInfo, ProviderInfo } from './types';
 import * as providers from './registry';
 import { createScopedLogger } from '~/utils/logger';
+import { resolveDefaultProviderName } from './defaults';
 
 const logger = createScopedLogger('LLMManager');
 export class LLMManager {
@@ -201,11 +202,22 @@ export class LLMManager {
   }
 
   getDefaultProvider(): BaseProvider {
+    const configuredDefaultProviderName = resolveDefaultProviderName(this._env);
+    const configuredDefaultProvider = Array.from(this._providers.values()).find(
+      (provider) => provider.name.toLowerCase() === configuredDefaultProviderName.toLowerCase(),
+    );
+
+    if (configuredDefaultProvider) {
+      return configuredDefaultProvider;
+    }
+
     const firstProvider = this._providers.values().next().value;
 
     if (!firstProvider) {
       throw new Error('No providers registered');
     }
+
+    logger.warn(`Configured default provider "${configuredDefaultProviderName}" not found. Falling back to ${firstProvider.name}.`);
 
     return firstProvider;
   }

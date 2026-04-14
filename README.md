@@ -262,7 +262,8 @@ The Local Providers tab manages local AI installations and custom endpoints:
 #### Ollama Configuration
 1. **Enable Ollama**: Toggle the Ollama provider switch
 2. **Configure Endpoint**: Set the API endpoint (defaults to `http://127.0.0.1:11434`)
-3. **Model Management**:
+3. **Default Selection**: Set `Ollama` + `gemma4:e4b` as the startup default through `.env.local`
+4. **Model Management**:
    - View all installed models with size and parameter information
    - Update models to latest versions with one click
    - Delete unused models
@@ -285,8 +286,14 @@ OPENAI_API_KEY=your_openai_key_here
 ANTHROPIC_API_KEY=your_anthropic_key_here
 
 # Custom Base URLs
-OLLAMA_BASE_URL=http://127.0.0.1:11434
-LMSTUDIO_BASE_URL=http://127.0.0.1:1234
+OLLAMA_API_BASE_URL=http://127.0.0.1:11434
+LMSTUDIO_API_BASE_URL=http://127.0.0.1:1234
+
+# Default LLM
+DEFAULT_LLM_PROVIDER=Ollama
+DEFAULT_LLM_MODEL=gemma4:e4b
+VITE_DEFAULT_LLM_PROVIDER=Ollama
+VITE_DEFAULT_LLM_MODEL=gemma4:e4b
 ```
 
 #### UI-Based Configuration

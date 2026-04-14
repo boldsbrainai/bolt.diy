@@ -229,8 +229,8 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
                   Code & Development
                 </h5>
                 <div className="space-y-2 text-xs bg-bolt-elements-background-depth-4 p-3 rounded font-mono text-bolt-elements-textPrimary">
-                  <div># Latest Llama 3.2 for coding</div>
-                  <div>ollama pull llama3.2:3b</div>
+                  <div># Recommended Gemma 4 model for coding</div>
+                  <div>ollama pull gemma4:e4b</div>
                   <div>ollama pull codellama:13b</div>
                   <div>ollama pull deepseek-coder-v2</div>
                   <div>ollama pull qwen2.5-coder:7b</div>
@@ -243,7 +243,7 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
                 </h5>
                 <div className="space-y-2 text-xs bg-bolt-elements-background-depth-4 p-3 rounded font-mono text-bolt-elements-textPrimary">
                   <div># Latest general models</div>
-                  <div>ollama pull llama3.2:3b</div>
+                  <div>ollama pull gemma4:e4b</div>
                   <div>ollama pull mistral:7b</div>
                   <div>ollama pull phi3.5:3.8b</div>
                   <div>ollama pull qwen2.5:7b</div>

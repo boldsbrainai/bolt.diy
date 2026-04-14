@@ -786,7 +786,7 @@ export const ModelSelector = ({
                   {!debouncedModelSearchQuery && provider?.name && LOCAL_PROVIDERS.includes(provider.name) && (
                     <div className="text-xs text-bolt-elements-textTertiary mt-1">
                       Make sure {provider.name} is running and has at least one model loaded.
-                      {provider.name === 'Ollama' && ' Try: ollama pull llama3.2'}
+                      {provider.name === 'Ollama' && ' Try: ollama pull gemma4:e4b'}
                       {provider.name === 'LMStudio' && ' Load a model in LM Studio first.'}
                     </div>
                   )}
