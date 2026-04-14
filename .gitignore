@@ -45,8 +45,11 @@ app/commit.json
 changelogUI.md
 docs/instructions/Roadmap.md
 .cursorrules
-*.md
 .qodo
+# Note: Specific markdown files in docs/ are allowed (DOCKER_PERSISTENCE.md, DOCKER_QUICK_START.md, etc)
+# Only exclude markdown files outside docs/
+/*.md
+*.md.backup
 
 # temporary test/debug files
 run_test_*.ps1
