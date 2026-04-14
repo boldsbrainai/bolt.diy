@@ -1,4 +1,5 @@
 import { json } from '@remix-run/cloudflare';
+import { resolveGitHubToken } from '~/lib/.server/github-token';
 import JSZip from 'jszip';
 
 // Function to detect if we're running in Cloudflare
@@ -210,9 +211,7 @@ export async function loader({ request, context }: { request: Request; context: 
   }
 
   try {
-    // Access environment variables from Cloudflare context or process.env
-    const githubToken =
-      context?.cloudflare?.env?.GITHUB_TOKEN || process.env.GITHUB_TOKEN || process.env.VITE_GITHUB_ACCESS_TOKEN;
+    const githubToken = resolveGitHubToken({ request, context });
 
     let fileList;
 

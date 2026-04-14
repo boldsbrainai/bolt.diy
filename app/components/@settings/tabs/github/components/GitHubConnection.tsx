@@ -65,14 +65,18 @@ export function GitHubConnection({ connectionTest, onTestConnection }: GitHubCon
           <div className="text-xs text-bolt-elements-textSecondary bg-bolt-elements-background-depth-1 dark:bg-bolt-elements-background-depth-1 p-3 rounded-lg mb-4">
             <p className="flex items-center gap-1 mb-1">
               <span className="i-ph:lightbulb w-3.5 h-3.5 text-bolt-elements-icon-success dark:text-bolt-elements-icon-success" />
-              <span className="font-medium">Tip:</span> You can also set the{' '}
+              <span className="font-medium">Tip:</span> Prefer setting{' '}
               <code className="px-1 py-0.5 bg-bolt-elements-background-depth-2 dark:bg-bolt-elements-background-depth-2 rounded">
-                VITE_GITHUB_ACCESS_TOKEN
+                GITHUB_API_KEY
               </code>{' '}
-              environment variable to connect automatically.
+              in <code className="px-1 py-0.5 bg-bolt-elements-background-depth-2 dark:bg-bolt-elements-background-depth-2 rounded">.env.local</code> for server-side GitHub Models and GitHub integration.
             </p>
             <p>
-              For fine-grained tokens, also set{' '}
+              If you explicitly need a browser-exposed token for client-side GitHub features, you can still set{' '}
+              <code className="px-1 py-0.5 bg-bolt-elements-background-depth-2 dark:bg-bolt-elements-background-depth-2 rounded">
+                VITE_GITHUB_ACCESS_TOKEN
+              </code>
+              {' '}and{' '}
               <code className="px-1 py-0.5 bg-bolt-elements-background-depth-2 dark:bg-bolt-elements-background-depth-2 rounded">
                 VITE_GITHUB_TOKEN_TYPE=fine-grained
               </code>
@@ -90,6 +94,7 @@ export function GitHubConnection({ connectionTest, onTestConnection }: GitHubCon
                 value={tokenType}
                 onChange={(e) => setTokenType(e.target.value as 'classic' | 'fine-grained')}
                 disabled={isConnecting || isConnected}
+                title="GitHub token type"
                 className={classNames(
                   'w-full px-3 py-2 rounded-lg text-sm',
                   'bg-bolt-elements-background-depth-1 dark:bg-bolt-elements-background-depth-1',
@@ -113,9 +118,8 @@ export function GitHubConnection({ connectionTest, onTestConnection }: GitHubCon
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
                 disabled={isConnecting || isConnected}
-                placeholder={`Enter your GitHub ${
-                  tokenType === 'classic' ? 'personal access token' : 'fine-grained token'
-                }`}
+                placeholder={`Enter your GitHub ${tokenType === 'classic' ? 'personal access token' : 'fine-grained token'
+                  }`}
                 className={classNames(
                   'w-full px-3 py-2 rounded-lg text-sm',
                   'bg-[#F8F8F8] dark:bg-[#1A1A1A]',

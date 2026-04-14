@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import type { GitHubUserResponse, GitHubConnection } from '~/types/GitHub';
 import { useGitHubAPI } from './useGitHubAPI';
-import { githubConnection, isConnecting, updateGitHubConnection } from '~/lib/stores/github';
+import { githubConnection, initializeGitHubConnection, isConnecting, updateGitHubConnection } from '~/lib/stores/github';
 
 export interface ConnectionState {
   isConnected: boolean;
@@ -38,33 +38,6 @@ export function useGitHubConnection(): UseGitHubConnectionReturn {
     loadSavedConnection();
   }, []);
 
-  const loadSavedConnection = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // Check if connection already exists in store (likely from initialization)
-      if (connection?.user) {
-        setIsLoading(false);
-        return;
-      }
-
-      // If we have a token but no user, or incomplete data, refresh
-      if (connection?.token && (!connection.user || !connection.stats)) {
-        await refreshConnectionData(connection);
-      }
-
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error loading saved connection:', error);
-      setError('Failed to load saved connection');
-      setIsLoading(false);
-
-      // Clean up corrupted data
-      localStorage.removeItem(STORAGE_KEY);
-    }
-  }, [connection]);
-
   const refreshConnectionData = useCallback(async (connection: GitHubConnection) => {
     if (!connection.token) {
       return;
@@ -96,6 +69,35 @@ export function useGitHubConnection(): UseGitHubConnectionReturn {
       console.error('Error refreshing connection data:', error);
     }
   }, []);
+
+  const loadSavedConnection = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Check if connection already exists in store (likely from initialization)
+      if (connection?.user) {
+        setIsLoading(false);
+        return;
+      }
+
+      // If we have a token but no user, or incomplete data, refresh
+      if (connection?.token && (!connection.user || !connection.stats)) {
+        await refreshConnectionData(connection);
+      } else if (!connection?.user) {
+        await initializeGitHubConnection();
+      }
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error loading saved connection:', error);
+      setError('Failed to load saved connection');
+      setIsLoading(false);
+
+      // Clean up corrupted data
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, [connection, refreshConnectionData]);
 
   const connect = useCallback(async (token: string, tokenType: 'classic' | 'fine-grained') => {
     console.log('useGitHubConnection.connect called with tokenType:', tokenType);
