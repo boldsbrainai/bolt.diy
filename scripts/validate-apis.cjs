@@ -10,6 +10,9 @@ const https = require('https');
 const http = require('http');
 const { URL } = require('url');
 
+// Load environment from backup file (old credentials to validate before revocation)
+require('dotenv').config({ path: '.env.local.backup-20260413-062607' });
+
 // Colors for console output
 const colors = {
   reset: '\x1b[0m',

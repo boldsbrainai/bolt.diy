@@ -105,6 +105,39 @@ services:
       - RUNNING_IN_DOCKER=true
     extra_hosts:
       - 'host.docker.internal:host-gateway'
+    volumes:
+      - bolt-data:/root/.config
+      - bolt-cache:/app/.cache
+      - bolt-npm-cache:/root/.npm
     command: pnpm run dockerstart
     profiles:
       - prebuilt
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:5173/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  bolt-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOLT_DATA_PATH:-./.docker/data}
+  
+  bolt-cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOLT_CACHE_PATH:-./.docker/cache}
+  
+  bolt-npm-cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOLT_NPM_CACHE_PATH:-./.docker/npm-cache}
